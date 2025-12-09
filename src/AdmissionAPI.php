@@ -4,7 +4,7 @@ namespace Koramit\SiMEDPortalAPI;
 
 use Koramit\SiMEDPortalAPI\Traits\PortalCallable;
 
-class Admission
+class AdmissionAPI
 {
     use PortalCallable;
 
