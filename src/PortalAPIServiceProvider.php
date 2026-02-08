@@ -8,7 +8,8 @@ class PortalAPIServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $configPath = $this->configPath();
+        $configPath = __DIR__ . '/../config/simed-portal.php';
+        $this->mergeConfigFrom($configPath, 'simed-portal');
 
         if ($configPath && file_exists($configPath)) {
             $this->mergeConfigFrom($configPath, 'simed-portal');
@@ -17,23 +18,18 @@ class PortalAPIServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        if (! $this->app->runningInConsole()) {
-            return;
-        }
-
-        $configPath = $this->configPath();
-
-        if ($configPath && file_exists($configPath)) {
-            $this->publishes([
-                $configPath => config_path('simed-portal.php'),
-            ], 'simed-portal-config');
+        if ($this->app->runningInConsole()) {
+            $configPath = __DIR__ . '/../config/simed-portal.php';
+            $this->publishes([$configPath => $this->getConfigPath()], 'config');
         }
     }
 
-    protected function configPath(): string|false
+    /**
+     * Get the config path
+     *
+     */
+    protected function getConfigPath(): string
     {
-        $path = __DIR__.'/../config/simed-portal.php';
-
-        return realpath($path) ?: false;
+        return config_path('simed-portal.php');
     }
 }
