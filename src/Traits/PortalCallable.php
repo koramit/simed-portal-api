@@ -26,6 +26,7 @@ trait PortalCallable
 
             return [
                 'ok' => false,
+                'found' => false,
                 'status' => $e->getCode(),
                 'error' => $e->getMessage(),
                 'body' => config('simed-portal.service_failed_message'),
@@ -44,6 +45,7 @@ trait PortalCallable
 
         return [
             'ok' => false,
+            'found' => false,
             'status' => $response->status(),
             'error' => $response->serverError() ? 'server' : 'client',
             'body' => config('simed-portal.service_failed_message'),
