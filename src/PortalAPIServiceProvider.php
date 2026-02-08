@@ -17,12 +17,14 @@ class PortalAPIServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $configPath = __DIR__.'/config.php';
+        if ($this->app->runningInConsole()) {
+            $configPath = __DIR__.'/config.php';
 
-        if (file_exists($configPath)) {
-            $this->publishes([
-                $configPath => config_path('simed-portal.php'),
-            ], 'config');
+            if (file_exists($configPath)) {
+                $this->publishes([
+                    $configPath => config_path('simed-portal.php'),
+                ], 'config');
+            }
         }
     }
 }
