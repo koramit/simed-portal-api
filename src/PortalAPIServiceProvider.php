@@ -8,20 +8,32 @@ class PortalAPIServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->mergeConfigFrom($this->configPath(), 'simed-portal');
+        $configPath = $this->configPath();
+
+        if ($configPath && file_exists($configPath)) {
+            $this->mergeConfigFrom($configPath, 'simed-portal');
+        }
     }
 
     public function boot(): void
     {
-        if ($this->app->runningInConsole()) {
+        if (! $this->app->runningInConsole()) {
+            return;
+        }
+
+        $configPath = $this->configPath();
+
+        if ($configPath && file_exists($configPath)) {
             $this->publishes([
-                $this->configPath() => config_path('simed-portal.php'),
+                $configPath => config_path('simed-portal.php'),
             ], 'simed-portal-config');
         }
     }
 
-    protected function configPath(): string
+    protected function configPath(): string|false
     {
-        return __DIR__.'/../config/simed-portal.php';
+        $path = __DIR__.'/../config/simed-portal.php';
+
+        return realpath($path) ?: false;
     }
 }
