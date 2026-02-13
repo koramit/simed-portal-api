@@ -15,11 +15,11 @@ class AdmissionAPI
         return $this->makePost($endpoint, ['an' => $an]);
     }
 
-    public function getPatientAdmissions(string|int $an, bool $withSensitiveData = true): array
+    public function getPatientAdmissions(string|int $hn, bool $withSensitiveData = true): array
     {
         $endpoint = 'patient-admissions'.($withSensitiveData ? '-with-sensitive-data' : '');
 
-        return $this->makePost($endpoint, ['an' => $an]);
+        return $this->makePost($endpoint, ['hn' => $hn]);
     }
 
     public function getPatientRecentlyAdmission(string|int $hn, bool $withSensitiveData = true): array
