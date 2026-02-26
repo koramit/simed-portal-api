@@ -8,7 +8,7 @@ class EncounterAPI
 {
     use PortalCallable;
 
-    public function getEncounter(string|int|null $hn, ?string $dateStart, ?string $dateEnd, ?string $status, ?string $id, ?string $partOf, ?string $request): array
+    public function getEncounter(string|int|null $hn, ?string $dateStart, ?string $dateEnd, ?string $status, ?string $id, ?string $partOf, ?array $request): array
     {
         $payload = [];
         if ($hn) {
@@ -26,7 +26,10 @@ class EncounterAPI
         if ($id) {
             $payload['id'] = $id;
         }
-        if ($request) {
+        if ($partOf) {
+            $payload['id'] = $partOf;
+        }
+        if (empty($request)) {
             $payload['request'] = $request;
         }
 
