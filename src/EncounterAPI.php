@@ -36,7 +36,7 @@ class EncounterAPI
         if ($partOf) {
             $payload['id'] = $partOf;
         }
-        if (empty($request)) {
+        if (! empty($request)) {
             $payload['request'] = $request;
         }
 
