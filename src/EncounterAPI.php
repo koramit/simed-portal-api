@@ -15,6 +15,7 @@ class EncounterAPI
         ?string $status = null,
         ?string $id = null,
         ?string $partOf = null,
+        ?string $url = null,
         ?array $request = null
     ): array {
         $payload = [];
@@ -35,6 +36,9 @@ class EncounterAPI
         }
         if ($partOf) {
             $payload['id'] = $partOf;
+        }
+        if ($url) {
+            $payload['url'] = $url;
         }
         if (! empty($request)) {
             $payload['request'] = $request;
