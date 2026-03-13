@@ -8,30 +8,30 @@ class AdmissionAPI
 {
     use PortalCallable;
 
-    public function getAdmission(string|int $an, bool $withSensitiveData = true): array
+    public function getAdmissionWS(string|int $an, bool $withSensitiveData = true): array
     {
-        $endpoint = 'admission'.($withSensitiveData ? '-with-sensitive-data' : '');
+        $endpoint = 'adm'.($withSensitiveData ? '/sd' : '');
 
         return $this->makePost($endpoint, ['an' => $an]);
     }
 
-    public function getPatientAdmissions(string|int $hn, bool $withSensitiveData = true): array
+    public function getPatientAdmissionsWS(string|int $hn, bool $withSensitiveData = true): array
     {
-        $endpoint = 'patient-admissions'.($withSensitiveData ? '-with-sensitive-data' : '');
+        $endpoint = 'pt/adm'.($withSensitiveData ? '/sd' : '');
 
         return $this->makePost($endpoint, ['hn' => $hn]);
     }
 
-    public function getPatientRecentlyAdmission(string|int $hn, bool $withSensitiveData = true): array
+    public function getPatientRecentlyAdmissionWS(string|int $hn, bool $withSensitiveData = true): array
     {
-        $endpoint = 'patient-recently-admission'.($withSensitiveData ? '-with-sensitive-data' : '');
+        $endpoint = 'pt/adm/lst'.($withSensitiveData ? '/sd' : '');
 
         return $this->makePost($endpoint, ['hn' => $hn]);
     }
 
-    public function getAdmissionDSL(string|int $an, bool $raw = false, bool $withSensitiveData = true): array
+    public function getAdmissionEHIS(string|int $an, bool $raw = false, bool $withSensitiveData = true): array
     {
-        $endpoint = 'dsl/admission'.($withSensitiveData ? '-with-sensitive-data' : '');
+        $endpoint = 'dsl/adm'.($withSensitiveData ? '/sd' : '');
 
         return $this->makePost($endpoint, [
             'an' => $an,
@@ -39,9 +39,9 @@ class AdmissionAPI
         ]);
     }
 
-    public function getPatientAdmissionsDSL(string|int $hn, bool $raw = false, bool $withSensitiveData = true): array
+    public function getPatientAdmissionsEHIS(string|int $hn, bool $raw = false, bool $withSensitiveData = true): array
     {
-        $endpoint = 'dsl/patient-admissions'.($withSensitiveData ? '-with-sensitive-data' : '');
+        $endpoint = 'dsl/pt/adm'.($withSensitiveData ? '/sd' : '');
 
         return $this->makePost($endpoint, [
             'hn' => $hn,
@@ -49,9 +49,9 @@ class AdmissionAPI
         ]);
     }
 
-    public function getPatientRecentlyAdmissionDSL(string|int $hn, bool $raw = false, bool $withSensitiveData = true): array
+    public function getPatientRecentlyAdmissionEHIS(string|int $hn, bool $raw = false, bool $withSensitiveData = true): array
     {
-        $endpoint = 'dsl/patient-recently-admission'.($withSensitiveData ? '-with-sensitive-data' : '');
+        $endpoint = 'dsl/pt/adm/lst'.($withSensitiveData ? '/sd' : '');
 
         return $this->makePost($endpoint, [
             'hn' => $hn,
