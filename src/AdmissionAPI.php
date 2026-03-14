@@ -58,4 +58,29 @@ class AdmissionAPI
             'raw' => $raw,
         ]);
     }
+
+    public function getAdmissionDSL(string|int $an): array
+    {
+        return (new EncounterAPI)->getEncounter(url: 'AN'.$an);
+    }
+
+    public function getPatientAdmissionsDSL(string|int $hn): array
+    {
+        return (new EncounterAPI)->getEncounter(request: [
+            'subject' => 'HN'.$hn,
+            'class' => 'IMP',
+            '_sort' => 'date',
+            '_maxresults' => '1000',
+        ]);
+    }
+
+    public function getPatientRecentlyAdmissionDSL(string|int $hn): array
+    {
+        return (new EncounterAPI)->getEncounter(request: [
+            'subject' => 'HN'.$hn,
+            'class' => 'IMP',
+            '_sort' => '-date',
+            '_maxresults' => '1',
+        ]);
+    }
 }

@@ -8,16 +8,16 @@ class PatientAPI
 {
     use PortalCallable;
 
-    public function getPatient(string|int $hn, bool $withSensitiveData = true): array
+    public function getPatientWS(string|int $hn, bool $withSensitiveData = true): array
     {
-        $endpoint = 'patient'.($withSensitiveData ? '-with-sensitive-data' : '');
+        $endpoint = 'pt'.($withSensitiveData ? '/sd' : '');
 
         return $this->makePost($endpoint, ['hn' => $hn]);
     }
 
     public function getPatientDSL(string $keyValue, string $keyName = 'hn', bool $raw = false, bool $withSensitiveData = true): array
     {
-        $endpoint = 'dsl/patient'.($withSensitiveData ? '-with-sensitive-data' : '');
+        $endpoint = 'dsl/pt'.($withSensitiveData ? '/sd' : '');
 
         return $this->makePost($endpoint, [
             'key_name' => $keyName,
