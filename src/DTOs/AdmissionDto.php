@@ -20,8 +20,8 @@ readonly class AdmissionDto
         public ?string $attend_practitioner = null,
         public ?string $discharge_practitioner = null,
         public ?Carbon $discharged_at = null,
-        public ?string $discharged_status = null,
-        public ?string $discharged_type = null,
+        public ?string $discharge_status = null,
+        public ?string $discharge_type = null,
     ) {}
 
     public static function fromDSL(array $data): static
@@ -37,8 +37,8 @@ readonly class AdmissionDto
         $discharged_at = $data['period']['end'] ?? null
             ? Carbon::create($data['period']['end'])->timezone('UTC')
             : null;
-        $discharged_status = $data['hospitalization']['extension'][0]['valueCodeableConcept']['coding'][0]['display'] ?? null;
-        $discharged_type = $data['hospitalization']['extension'][1]['valueCodeableConcept']['coding'][0]['display'] ?? null;
+        $discharge_status = $data['hospitalization']['extension'][0]['valueCodeableConcept']['coding'][0]['display'] ?? null;
+        $discharge_type = $data['hospitalization']['extension'][1]['valueCodeableConcept']['coding'][0]['display'] ?? null;
 
         /** @var WardLocationDto[] $locations */
         $locations = [];
@@ -73,8 +73,8 @@ readonly class AdmissionDto
             $attend_practitioner,
             $discharge_practitioner,
             $discharged_at,
-            $discharged_status,
-            $discharged_type,
+            $discharge_status,
+            $discharge_type,
         );
     }
 
@@ -94,8 +94,8 @@ readonly class AdmissionDto
             discharged_at: $data['discharged_at']
                 ? Carbon::create($data['discharged_at'], 'Asia/Bangkok')->timezone('UTC')
                 : null,
-            discharged_status: $data['discharged_status'],
-            discharged_type: $data['discharged_type'],
+            discharge_status: $data['discharged_status'],
+            discharge_type: $data['discharged_type'],
         );
     }
 }
