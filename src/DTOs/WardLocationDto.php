@@ -14,6 +14,7 @@ readonly class WardLocationDto
         public ?string $room = null,
         public ?Carbon $start = null,
         public ?Carbon $end = null,
+        public ?string $ward_name_short = null,
     ) {}
 
     public static function fromDSL(array $data): static

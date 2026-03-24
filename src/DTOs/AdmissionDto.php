@@ -85,7 +85,11 @@ readonly class AdmissionDto
             patient_name: $data['patient_name'],
             an: $data['an'],
             admitted_at: Carbon::create($data['admitted_at'], 'Asia/Bangkok')->timezone('UTC'),
-            locations: [new WardLocationDto($data['ward_number'], $data['ward_name'])],
+            locations: [new WardLocationDto(
+                ward_code: $data['ward_number'],
+                ward_name: $data['ward_name'],
+                ward_name_short: $data['ward_name_short'],
+            )],
             attend_practitioner: $data['attending'],
             discharged_at: $data['discharged_at']
                 ? Carbon::create($data['discharged_at'], 'Asia/Bangkok')->timezone('UTC')
