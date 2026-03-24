@@ -2,6 +2,7 @@
 
 namespace Koramit\SiMEDPortalAPI;
 
+use Koramit\SiMEDPortalAPI\DTOs\ResponseDto;
 use Koramit\SiMEDPortalAPI\Traits\PortalCallable;
 
 class EncounterAPI
@@ -17,7 +18,7 @@ class EncounterAPI
         ?string $partOf = null,
         ?string $url = null,
         ?array $request = null
-    ): array {
+    ): ResponseDto {
         $payload = [];
         if ($hn) {
             $payload['hn'] = (string) $hn;
@@ -45,11 +46,13 @@ class EncounterAPI
         }
 
         return empty($payload)
-            ? [
-                'ok' => false,
-                'found' => false,
-                'message' => 'No parameter provided.',
-            ]
+            ? new ResponseDto(
+                false,
+                false,
+                422,
+                'No parameter provided.',
+                []
+            )
             : $this->makePost('encounter', $payload);
     }
 }

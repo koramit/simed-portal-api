@@ -7,14 +7,15 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Koramit\SiMEDPortalAPI\DTOs\ResponseDto;
 
 trait PortalCallable
 {
-    protected function makePost(string $route, array $data): array
+    protected function makePost(string $route, array $data): ResponseDto
     {
         try {
             $response = Http::withToken(config('simed-portal.token'))
-                ->retry(2, 200, function (Exception $exception) {
+                ->retry(3, 250, function (Exception $exception) {
                     return $exception instanceof ConnectionException
                         && str_contains($exception->getMessage(), 'timed out after');
                 }, throw: false)
@@ -24,17 +25,25 @@ trait PortalCallable
         } catch (Exception $e) {
             Log::error($route.'@portal '.$e->getMessage());
 
-            return [
-                'ok' => false,
-                'found' => false,
-                'status' => $e->getCode(),
-                'error' => $e->getMessage(),
-                'body' => config('simed-portal.service_failed_message'),
-            ];
+            return new ResponseDto(
+                ok: false,
+                found: false,
+                status: $e->getCode(),
+                message: $e->getMessage(),
+                data: []
+            );
         }
 
         if ($response->successful() && ($response->json()['ok'] ?? false)) {
-            return $response->json();
+            $data = $response->json();
+
+            return new ResponseDto(
+                ok: true,
+                found: $data['found'] ?? false,
+                status: $response->status(),
+                message: $data['message'] ?? $data['body'] ?? null,
+                data: $this->trimUnuseKeys($data)
+            );
         }
 
         Log::notice($route.'@portal '.$response->body());
@@ -43,12 +52,26 @@ trait PortalCallable
             throw ValidationException::withMessages($response->json());
         }
 
-        return [
-            'ok' => false,
-            'found' => false,
-            'status' => $response->status(),
-            'error' => $response->serverError() ? 'server' : 'client',
-            'body' => config('simed-portal.service_failed_message'),
-        ];
+        return new ResponseDto(
+            ok: false,
+            found: false,
+            status: $response->status(),
+            message: $response->body(),
+            data: []
+        );
+    }
+
+    protected function trimUnuseKeys(array $data): array
+    {
+        unset(
+            $data['ok'],
+            $data['found'],
+            $data['status'],
+            $data['error'],
+            $data['message'],
+            $data['body'],
+        );
+
+        return $data;
     }
 }

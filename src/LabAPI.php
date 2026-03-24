@@ -2,28 +2,29 @@
 
 namespace Koramit\SiMEDPortalAPI;
 
+use Koramit\SiMEDPortalAPI\DTOs\ResponseDto;
 use Koramit\SiMEDPortalAPI\Traits\PortalCallable;
 
 class LabAPI
 {
     use PortalCallable;
 
-    public function getLabPendingReports(int|string $hn): array
+    public function getLabPendingReports(int|string $hn): ResponseDto
     {
         return $this->makePost('lab-pending', ['hn' => (string) $hn]);
     }
 
-    public function getLabRecentlyOrders(int|string $hn): array
+    public function getLabRecentlyOrders(int|string $hn): ResponseDto
     {
         return $this->makePost('lab-recently', ['hn' => (string) $hn]);
     }
 
-    public function getLabFromRefNo(int|string $refNo): array
+    public function getLabFromRefNo(int|string $refNo): ResponseDto
     {
         return $this->makePost('lab-from-ref-no', ['ref_no' => $refNo]);
     }
 
-    public function getLabFromServiceId(int|string $hn, int|string|array $serviceIds, bool $recently = false, ?string $dateStart = null, ?string $dateEnd = null): array
+    public function getLabFromServiceId(int|string $hn, int|string|array $serviceIds, bool $recently = false, ?string $dateStart = null, ?string $dateEnd = null): ResponseDto
     {
         return $this->makePost(
             'lab-from-service-id',
@@ -36,7 +37,7 @@ class LabAPI
             ]);
     }
 
-    public function getLabFromItemCodeAllResults(string|int $hn, string $itemCode): array
+    public function getLabFromItemCodeAllResults(string|int $hn, string $itemCode): ResponseDto
     {
         return $this->makePost(
             'lab-from-item-all',
@@ -46,7 +47,7 @@ class LabAPI
             ]);
     }
 
-    public function getLabFromItemCodes(string|int $hn, array|string $itemCodes, ?string $dateStart = null, ?string $dateEnd = null): array
+    public function getLabFromItemCodes(string|int $hn, array|string $itemCodes, ?string $dateStart = null, ?string $dateEnd = null): ResponseDto
     {
         return $this->makePost(
             'lab-from-item-code',
