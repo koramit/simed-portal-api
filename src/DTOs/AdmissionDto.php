@@ -94,8 +94,8 @@ readonly class AdmissionDto
             discharged_at: $data['discharged_at']
                 ? Carbon::create($data['discharged_at'], 'Asia/Bangkok')->timezone('UTC')
                 : null,
-            discharge_status: $data['discharged_status'],
-            discharge_type: $data['discharged_type'],
+            discharge_status: $data['discharge_status'],
+            discharge_type: $data['discharge_type'],
         );
     }
 }
