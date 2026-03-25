@@ -20,13 +20,20 @@ readonly class WardLocationDto
     public static function fromDSL(array $data): static
     {
         $codes = explode('-', str_replace('Location/', '', $data['location']['reference']));
-        $bed = $codes[0];
-        $room = $codes[1];
-        $ward_code = $codes[2];
-        $wardNames = explode('-', $data['location']['display']);
-        $wardName = count($wardNames) > 3
-            ? "$wardNames[2]-$wardNames[3]"
-            : $wardNames[2];
+        if (count($codes) === 1) {
+            $bed = null;
+            $room = null;
+            $ward_code = $codes[0];
+            $wardName = $data['location']['display'];
+        } else {
+            $bed = $codes[0];
+            $room = $codes[1];
+            $ward_code = $codes[2];
+            $wardNames = explode('-', $data['location']['display']);
+            $wardName = count($wardNames) > 3
+                ? "$wardNames[2]-$wardNames[3]"
+                : $wardNames[2];
+        }
         $ward_name = Str::replaceFirst('หอผู้ป่วย', '', $wardName);
         $start = Carbon::create($data['period']['start'])->timezone('UTC');
         $end = $data['period']['end'] ?? null
