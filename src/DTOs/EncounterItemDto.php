@@ -20,6 +20,6 @@ readonly class EncounterItemDto
 
     public function getDurationInMinutes(): int
     {
-        return $this->end ? $this->start->diff($this->end)->i : 0;
+        return (int) $this->start->diffInMinutes($this->end);
     }
 }

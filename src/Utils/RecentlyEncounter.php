@@ -4,15 +4,13 @@ namespace Koramit\SiMEDPortalAPI\Utils;
 
 use Illuminate\Support\Facades\Concurrency;
 use Koramit\SiMEDPortalAPI\DTOs\AdmissionDto;
+use Koramit\SiMEDPortalAPI\DTOs\RecentlyEncounterDto;
 use Koramit\SiMEDPortalAPI\DTOs\VisitDto;
 use Koramit\SiMEDPortalAPI\EncounterAPI;
 
 class RecentlyEncounter
 {
-    /**
-     * @return array{?AdmissionDto, ?VisitDto}
-     */
-    public function __invoke(int $hn): array
+    public function __invoke(int $hn): RecentlyEncounterDto
     {
         $api = new EncounterAPI;
 
@@ -39,6 +37,9 @@ class RecentlyEncounter
             ? VisitDto::fromFHIRBundle($opdResponse->data)
             : null;
 
-        return [$latestAdmission, $latestVisit];
+        return new RecentlyEncounterDto(
+            admission: $latestAdmission,
+            visit: $latestVisit,
+        );
     }
 }

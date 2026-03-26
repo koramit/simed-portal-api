@@ -22,6 +22,7 @@ readonly class AdmissionDto
         public ?Carbon $discharged_at = null,
         public ?string $discharge_status = null,
         public ?string $discharge_type = null,
+        public bool $active = false,
     ) {}
 
     public static function fromDSL(array $data): static
@@ -75,6 +76,7 @@ readonly class AdmissionDto
             $discharged_at,
             $discharge_status,
             $discharge_type,
+            $discharged_at === null,
         );
     }
 
@@ -96,6 +98,7 @@ readonly class AdmissionDto
                 : null,
             discharge_status: $data['discharge_status'],
             discharge_type: $data['discharge_type'],
+            active: $data['discharged_at'] === null,
         );
     }
 }

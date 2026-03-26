@@ -12,15 +12,22 @@ readonly class VisitDto
         public string $vn,
         public string $hn,
         public string $patient_name,
-        public Carbon $visited_at,
-        public string $type,
+        public Carbon $start,
+        public Carbon $end,
+        public ?string $type,
         public string $status,
+        public bool $active,
         public Collection $items,
     ) {}
 
     public function countDistinctClinics(): int
     {
-        return collect($this->items)->pluck('clinicCode')->unique()->count();
+        return collect($this->items)->pluck('clinic_code')->unique()->count();
+    }
+
+    public function getDurationInMinutes(): int
+    {
+        return (int) $this->start->diffInMinutes($this->items->last()->end);
     }
 
     public static function fromFHIRBundle(array $bundle): VisitDto
@@ -53,9 +60,11 @@ readonly class VisitDto
             vn: $res['id'],
             hn: $res['subject']['identifier']['value'],
             patient_name: $res['subject']['display'],
-            visited_at: Carbon::create($res['period']['start'])->timezone('UTC'),
-            type: $res['type'][0]['coding'][0]['display'] ?? '',
+            start: Carbon::create($res['period']['start'])->timezone('UTC'),
+            end: Carbon::create($res['period']['end'])->timezone('UTC'),
+            type: $res['type'][0]['coding'][0]['display'] ?? null,
             status: $res['status'],
+            active: $res['period']['start'] === $res['period']['end'],
             items: $items
         );
     }
