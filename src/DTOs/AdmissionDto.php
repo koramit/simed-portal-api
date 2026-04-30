@@ -3,18 +3,17 @@
 namespace Koramit\SiMEDPortalAPI\DTOs;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 readonly class AdmissionDto
 {
-    /**
-     * @param  WardLocationDto[]  $locations
-     */
+    /** @param  Collection<WardLocationDto>  $locations */
     public function __construct(
         public int $hn,
         public string $patient_name,
         public int $an,
         public Carbon $admitted_at,
-        public array $locations,
+        public Collection $locations,
         public ?string $status = null,
         public ?string $admit_practitioner = null,
         public ?string $attend_practitioner = null,
@@ -27,6 +26,7 @@ readonly class AdmissionDto
 
     public static function fromDSL(array $data): static
     {
+        $data = $data['response'] ?? $data['resource'];
         $hn = $data['subject']['identifier']['value'];
         $patient_name = $data['subject']['display'];
         $an = $data['identifier'][0]['value'];
@@ -41,8 +41,7 @@ readonly class AdmissionDto
         $discharge_status = $data['hospitalization']['extension'][0]['valueCodeableConcept']['coding'][0]['display'] ?? null;
         $discharge_type = $data['hospitalization']['extension'][1]['valueCodeableConcept']['coding'][0]['display'] ?? null;
 
-        /** @var WardLocationDto[] $locations */
-        $locations = [];
+        $locations = collect();
         foreach ($data['location'] as $location) {
             $wardLocation = WardLocationDto::fromDSL($location);
             if (count($locations) === 0) {
@@ -87,11 +86,13 @@ readonly class AdmissionDto
             patient_name: $data['patient_name'],
             an: $data['an'],
             admitted_at: Carbon::create($data['admitted_at'], 'Asia/Bangkok')->timezone('UTC'),
-            locations: [new WardLocationDto(
-                ward_code: $data['ward_number'],
-                ward_name: $data['ward_name'],
-                ward_name_short: $data['ward_name_short'],
-            )],
+            locations: collect([
+                new WardLocationDto(
+                    ward_code: $data['ward_number'],
+                    ward_name: $data['ward_name'],
+                    ward_name_short: $data['ward_name_short'],
+                ),
+            ]),
             attend_practitioner: $data['attending'],
             discharged_at: $data['discharged_at']
                 ? Carbon::create($data['discharged_at'], 'Asia/Bangkok')->timezone('UTC')

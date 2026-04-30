@@ -22,4 +22,9 @@ class AdmissionWardAPI
             'number' => $wardNumber,
         ]);
     }
+
+    public function getWardTransferWS(int $an): ResponseDto
+    {
+        return $this->makePost('adm/mv', ['an' => $an]);
+    }
 }

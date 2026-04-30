@@ -30,7 +30,7 @@ class RecentlyEncounter
         ]);
 
         $latestAdmission = $ipdResponse->data['response']['total'] === 1
-            ? AdmissionDto::fromDSL($ipdResponse->data['response']['entry'][0]['resource'])
+            ? AdmissionDto::fromDSL($ipdResponse->data['response']['entry'][0])
             : null;
 
         $latestVisit = $opdResponse->data['response']['total'] > 1
