@@ -21,7 +21,7 @@ class EncounterAPI
     ): ResponseDto {
         $payload = [];
         if ($hn) {
-            $payload['hn'] = (string) $hn;
+            $payload['hn'] = $hn;
         }
         if ($dateStart) {
             $payload['date_start'] = $dateStart;

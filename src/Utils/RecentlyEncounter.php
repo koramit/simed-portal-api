@@ -9,7 +9,7 @@ use Koramit\SiMEDPortalAPI\EncounterAPI;
 
 class RecentlyEncounter
 {
-    public function __invoke(int $hn): RecentlyEncounterDto
+    public function __invoke(string|int $hn): RecentlyEncounterDto
     {
         // Both searches run concurrently in-process (Http::pool), so Http::fake() works in host-app tests.
         ['ipd' => $ipdResponse, 'opd' => $opdResponse] = (new EncounterAPI)->getEncounters([

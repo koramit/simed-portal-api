@@ -22,7 +22,7 @@ trait PortalCallable
         $url = $this->portalUrl($route);
 
         try {
-            $response = $request->post($url, $data);
+            $response = $request->post($url, $this->normalisePayload($data));
         } catch (Exception $e) {
             return $this->toResponseDto($route, $e);
         }
@@ -47,7 +47,7 @@ trait PortalCallable
         try {
             $results = Http::pool(function (Pool $pool) use ($calls, $urls) {
                 foreach ($calls as $key => [, $data]) {
-                    $this->portalRequest($pool->as((string) $key))->post($urls[$key], $data);
+                    $this->portalRequest($pool->as((string) $key))->post($urls[$key], $this->normalisePayload($data));
                 }
             });
         } catch (Exception $e) {
@@ -60,6 +60,21 @@ trait PortalCallable
         }
 
         return $dtos;
+    }
+
+    /** Payload keys holding identifiers; callers may pass them as string or int, the Portal gets strings. */
+    protected const IDENTIFIER_KEYS = ['hn', 'an', 'number'];
+
+    /** Send identifiers (hn, an, ward number) as strings, whatever type the caller passed. */
+    protected function normalisePayload(array $data): array
+    {
+        foreach (self::IDENTIFIER_KEYS as $key) {
+            if (is_int($data[$key] ?? null)) {
+                $data[$key] = (string) $data[$key];
+            }
+        }
+
+        return $data;
     }
 
     /** Apply the Portal token, timeouts, retries and TLS options to a request. */

@@ -8,7 +8,7 @@ use Koramit\SiMEDPortalAPI\EncounterAPI;
 
 class VisitBundle
 {
-    public function __invoke(int $vn): VisitBundleDto
+    public function __invoke(string|int $vn): VisitBundleDto
     {
         $dto = (new EncounterAPI)->getEncounter(request: [
             'identifier' => "http://si.mahidol.ac.th/mrs/out_patient_visit/vn|$vn",

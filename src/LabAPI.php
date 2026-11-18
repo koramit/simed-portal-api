@@ -9,14 +9,14 @@ class LabAPI
 {
     use PortalCallable;
 
-    public function getLabPendingReports(int|string $hn): ResponseDto
+    public function getLabPendingReports(string|int $hn): ResponseDto
     {
-        return $this->makePost('lab-pending', ['hn' => (string) $hn]);
+        return $this->makePost('lab-pending', ['hn' => $hn]);
     }
 
-    public function getLabRecentlyOrders(int|string $hn): ResponseDto
+    public function getLabRecentlyOrders(string|int $hn): ResponseDto
     {
-        return $this->makePost('lab-recently', ['hn' => (string) $hn]);
+        return $this->makePost('lab-recently', ['hn' => $hn]);
     }
 
     public function getLabFromRefNo(int|string $refNo): ResponseDto
@@ -24,12 +24,12 @@ class LabAPI
         return $this->makePost('lab-from-ref-no', ['ref_no' => $refNo]);
     }
 
-    public function getLabFromServiceId(int|string $hn, int|string|array $serviceIds, bool $recently = false, ?string $dateStart = null, ?string $dateEnd = null): ResponseDto
+    public function getLabFromServiceId(string|int $hn, int|string|array $serviceIds, bool $recently = false, ?string $dateStart = null, ?string $dateEnd = null): ResponseDto
     {
         return $this->makePost(
             'lab-from-service-id',
             [
-                'hn' => (string) $hn,
+                'hn' => $hn,
                 'service_ids' => is_array($serviceIds) ? $serviceIds : [$serviceIds],
                 'latest' => $recently,
                 'date_start' => $dateStart,
@@ -42,7 +42,7 @@ class LabAPI
         return $this->makePost(
             'lab-from-item-all',
             [
-                'hn' => (string) $hn,
+                'hn' => $hn,
                 'item_code' => $itemCode,
             ]);
     }
@@ -52,7 +52,7 @@ class LabAPI
         return $this->makePost(
             'lab-from-item-code',
             [
-                'hn' => (string) $hn,
+                'hn' => $hn,
                 'item_codes' => is_array($itemCodes) ? $itemCodes : [$itemCodes],
                 'date_start' => $dateStart,
                 'date_end' => $dateEnd,

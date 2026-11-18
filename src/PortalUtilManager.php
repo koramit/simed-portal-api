@@ -22,12 +22,12 @@ use Koramit\SiMEDPortalAPI\Utils\VisitBundle;
  */
 class PortalUtilManager
 {
-    public function getPatientRecentlyEncounter(int $hn): RecentlyEncounterDto
+    public function getPatientRecentlyEncounter(string|int $hn): RecentlyEncounterDto
     {
         return app(RecentlyEncounter::class)($hn);
     }
 
-    public function getVisitBundle(int $vn): VisitBundleDto
+    public function getVisitBundle(string|int $vn): VisitBundleDto
     {
         return app(VisitBundle::class)($vn);
     }
@@ -91,7 +91,7 @@ class PortalUtilManager
     }
 
     /** @return PortalResultDto<Collection<int, AdmissionSummaryDto>> */
-    public function getWardActiveAdmissions(int $wardNumber): PortalResultDto
+    public function getWardActiveAdmissions(string|int $wardNumber): PortalResultDto
     {
         return $this->toListResult(
             (new AdmissionWardAPI)->getActiveAdmissions($wardNumber),
@@ -109,7 +109,7 @@ class PortalUtilManager
     }
 
     /** @return PortalResultDto<Collection<int, AdmissionSummaryDto>> */
-    public function getDischargedAdmissions(string $beginDate, ?string $endDate = null, ?int $wardNumber = null): PortalResultDto
+    public function getDischargedAdmissions(string $beginDate, ?string $endDate = null, string|int|null $wardNumber = null): PortalResultDto
     {
         return $this->toListResult(
             (new AdmissionWardAPI)->getDischargeAdmissions($beginDate, $endDate, $wardNumber),
