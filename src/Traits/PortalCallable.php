@@ -8,15 +8,22 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Koramit\SiMEDPortalAPI\DTOs\ResponseDto;
+use Koramit\SiMEDPortalAPI\Exceptions\PortalNotConfiguredException;
 use Throwable;
 
 trait PortalCallable
 {
     protected function makePost(string $route, array $data): ResponseDto
     {
+        $url = $this->portalUrl($route);
+        $token = (string) config('simed-portal.token');
+        if ($token === '') {
+            throw PortalNotConfiguredException::missing('token', 'SIMED_PORTAL_TOKEN');
+        }
+
         try {
             // Retry only connection errors and timeouts; a received response (any status) is final.
-            $response = Http::withToken(config('simed-portal.token'))
+            $response = Http::withToken($token)
                 ->timeout((float) config('simed-portal.timeout', 10))
                 ->connectTimeout((float) config('simed-portal.connect_timeout', 3))
                 ->retry(
@@ -27,7 +34,7 @@ trait PortalCallable
                 )
                 ->withOptions(['verify' => config('simed-portal.verify_ssl')])
                 ->acceptJson()
-                ->post(config('simed-portal.endpoint').$route, $data);
+                ->post($url, $data);
         } catch (Exception $e) {
             Log::error($route.'@portal '.$e->getMessage());
 
@@ -81,6 +88,17 @@ trait PortalCallable
             message: config('simed-portal.service_failed_message'),
             data: []
         );
+    }
+
+    /** Join the endpoint and route with exactly one `/`, whether or not the endpoint ends with one. */
+    protected function portalUrl(string $route): string
+    {
+        $endpoint = rtrim((string) config('simed-portal.endpoint'), '/');
+        if ($endpoint === '') {
+            throw PortalNotConfiguredException::missing('endpoint', 'SIMED_PORTAL_ENDPOINT');
+        }
+
+        return $endpoint.'/'.ltrim($route, '/');
     }
 
     protected function trimUnuseKeys(array $data): array
