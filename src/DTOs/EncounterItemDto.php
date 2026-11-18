@@ -18,8 +18,18 @@ readonly class EncounterItemDto
         public string $status,
     ) {}
 
-    public function getDurationInMinutes(): int
+    public function isActive(): bool
     {
+        return in_array($this->status, VisitDto::ACTIVE_STATUSES, true);
+    }
+
+    /** Null while the item is still active (its `end` is not a finish time yet). */
+    public function getDurationInMinutes(): ?int
+    {
+        if ($this->isActive() || $this->end === null) {
+            return null;
+        }
+
         return (int) $this->start->diffInMinutes($this->end);
     }
 }

@@ -8,12 +8,7 @@ class PortalAPIServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $configPath = __DIR__.'/../config/simed-portal.php';
-        $this->mergeConfigFrom($configPath, 'simed-portal');
-
-        if ($configPath && file_exists($configPath)) {
-            $this->mergeConfigFrom($configPath, 'simed-portal');
-        }
+        $this->mergeConfigFrom(__DIR__.'/../config/simed-portal.php', 'simed-portal');
 
         $this->app->singleton('simed-portal-util', function ($app) {
             return new PortalUtilManager;

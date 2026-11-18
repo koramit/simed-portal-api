@@ -29,13 +29,18 @@ class RecentlyEncounter
             ]),
         ]);
 
-        $latestAdmission = $ipdResponse->data['response']['total'] === 1
-            ? AdmissionDto::fromDSL($ipdResponse->data['response']['entry'][0])
-            : null;
+        // `total` counts entries in this response (an AMB visit comes with its child encounters),
+        // so check the entries themselves.
+        $ipdEntries = $ipdResponse->data['response']['entry'] ?? [];
+        $opdEntries = $opdResponse->data['response']['entry'] ?? [];
 
-        $latestVisit = $opdResponse->data['response']['total'] > 1
-            ? VisitDto::fromFHIRBundle($opdResponse->data)
-            : null;
+        $latestAdmission = empty($ipdEntries)
+            ? null
+            : AdmissionDto::fromDSL($ipdEntries[0]);
+
+        $latestVisit = empty($opdEntries)
+            ? null
+            : VisitDto::fromFHIRBundle($opdResponse->data);
 
         return new RecentlyEncounterDto(
             admission: $latestAdmission,

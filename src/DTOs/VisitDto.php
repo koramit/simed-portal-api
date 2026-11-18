@@ -7,13 +7,16 @@ use Illuminate\Support\Collection;
 
 readonly class VisitDto
 {
+    /** FHIR Encounter statuses that mean the encounter is not over yet. */
+    public const ACTIVE_STATUSES = ['planned', 'arrived', 'triaged', 'in-progress', 'onleave'];
+
     /** @param Collection<EncounterItemDto> $items */
     public function __construct(
         public string $vn,
         public string $hn,
         public string $patient_name,
         public Carbon $start,
-        public Carbon $end,
+        public ?Carbon $end,
         public ?string $type,
         public string $status,
         public bool $active,
@@ -25,9 +28,16 @@ readonly class VisitDto
         return collect($this->items)->pluck('clinic_code')->unique()->count();
     }
 
-    public function getDurationInMinutes(): int
+    /** Null while the visit is still active (its `end` is not a finish time yet). */
+    public function getDurationInMinutes(): ?int
     {
-        return (int) $this->start->diffInMinutes($this->items->last()->end);
+        if ($this->active) {
+            return null;
+        }
+
+        $end = $this->items->last()?->end ?? $this->end;
+
+        return $end ? (int) $this->start->diffInMinutes($end) : null;
     }
 
     public static function fromFHIRBundle(array $bundle): VisitDto
@@ -61,10 +71,10 @@ readonly class VisitDto
             hn: $res['subject']['identifier']['value'],
             patient_name: $res['subject']['display'],
             start: Carbon::create($res['period']['start'])->timezone('UTC'),
-            end: Carbon::create($res['period']['end'])->timezone('UTC'),
+            end: isset($res['period']['end']) ? Carbon::create($res['period']['end'])->timezone('UTC') : null,
             type: $res['type'][0]['coding'][0]['display'] ?? null,
             status: $res['status'],
-            active: $res['period']['start'] === $res['period']['end'],
+            active: in_array($res['status'], self::ACTIVE_STATUSES, true),
             items: $items
         );
     }

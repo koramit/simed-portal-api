@@ -36,7 +36,7 @@ class EncounterAPI
             $payload['id'] = $id;
         }
         if ($partOf) {
-            $payload['id'] = $partOf;
+            $payload['part_of'] = $partOf;
         }
         if ($url) {
             $payload['url'] = $url;
@@ -53,6 +53,6 @@ class EncounterAPI
                 'No parameter provided.',
                 []
             )
-            : $this->makePost('encounter', $payload);
+            : $this->makePost('en', $payload);
     }
 }

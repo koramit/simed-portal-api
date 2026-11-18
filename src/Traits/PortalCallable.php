@@ -28,8 +28,8 @@ trait PortalCallable
             return new ResponseDto(
                 ok: false,
                 found: false,
-                status: $e->getCode(),
-                message: $e->getMessage(),
+                status: 503,
+                message: config('simed-portal.service_failed_message'),
                 data: []
             );
         }
@@ -37,26 +37,42 @@ trait PortalCallable
         if ($response->successful() && ($response->json()['ok'] ?? false)) {
             $data = $response->json();
 
+            // The Portal is a proxy: an upstream non-200 comes back as
+            // {ok: true, found: false, status, body}, so a `status` key means the upstream failed.
+            if (isset($data['status'])) {
+                Log::notice($route.'@portal upstream '.$data['status'].' '.($data['body'] ?? ''));
+
+                return new ResponseDto(
+                    ok: false,
+                    found: false,
+                    status: (int) $data['status'],
+                    message: config('simed-portal.service_failed_message'),
+                    data: []
+                );
+            }
+
             return new ResponseDto(
                 ok: true,
                 found: $data['found'] ?? false,
                 status: $response->status(),
-                message: $data['message'] ?? $data['body'] ?? null,
+                message: $data['message'] ?? null,
                 data: $this->trimUnuseKeys($data)
             );
         }
 
         Log::notice($route.'@portal '.$response->body());
 
+        // Host apps must validate input before calling the Portal, so a 422 here is a host-app bug:
+        // fail loudly with the Portal's field errors ({"message": ..., "errors": {"hn": [...]}}).
         if ($response->status() === 422) {
-            throw ValidationException::withMessages($response->json());
+            throw ValidationException::withMessages($response->json('errors') ?? []);
         }
 
         return new ResponseDto(
             ok: false,
             found: false,
             status: $response->status(),
-            message: $response->body(),
+            message: config('simed-portal.service_failed_message'),
             data: []
         );
     }
