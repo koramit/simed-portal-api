@@ -29,11 +29,12 @@ readonly class VisitDto
     }
 
     /**
-     * Sum of the child encounters' own durations (time between clinics is not counted).
+     * Total time covered by the child encounters: the union of their start → end intervals,
+     * so overlapping encounters (two clinics at once) count once and gaps between clinics
+     * are not counted.
      *
-     * Neither the parent's `end` (may be an automatic midnight close) nor the latest item `end`
-     * (may be a late chart edit, days later) is a reliable departure time, so the visit span is
-     * not used. A visit without items falls back to its own start → end.
+     * The parent's `end` is not used: eHIS closes visits automatically just after midnight.
+     * A visit without items falls back to its own start → end.
      * Null while the visit is still active, or when no item has a duration.
      */
     public function getDurationInMinutes(): ?int
@@ -46,11 +47,29 @@ readonly class VisitDto
             return $this->end ? (int) $this->start->diffInMinutes($this->end) : null;
         }
 
-        $durations = $this->items
-            ->map(fn (EncounterItemDto $item) => $item->getDurationInMinutes())
-            ->filter(fn (?int $minutes) => $minutes !== null);
+        $intervals = $this->items
+            ->filter(fn (EncounterItemDto $item) => $item->getDurationInMinutes() !== null)
+            ->map(fn (EncounterItemDto $item) => [$item->start->getTimestamp(), $item->end->getTimestamp()])
+            ->sortBy(fn (array $interval) => $interval[0])
+            ->values();
 
-        return $durations->isEmpty() ? null : (int) $durations->sum();
+        if ($intervals->isEmpty()) {
+            return null;
+        }
+
+        $seconds = 0;
+        [$start, $end] = $intervals->first();
+        foreach ($intervals->slice(1) as [$nextStart, $nextEnd]) {
+            if ($nextStart > $end) {
+                $seconds += $end - $start;
+                [$start, $end] = [$nextStart, $nextEnd];
+            } else {
+                $end = max($end, $nextEnd);
+            }
+        }
+        $seconds += $end - $start;
+
+        return intdiv($seconds, 60);
     }
 
     /**
