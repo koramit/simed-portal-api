@@ -8,17 +8,23 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Koramit\SiMEDPortalAPI\DTOs\ResponseDto;
+use Throwable;
 
 trait PortalCallable
 {
     protected function makePost(string $route, array $data): ResponseDto
     {
         try {
+            // Retry only connection errors and timeouts; a received response (any status) is final.
             $response = Http::withToken(config('simed-portal.token'))
-                ->retry(3, 250, function (Exception $exception) {
-                    return $exception instanceof ConnectionException
-                        && str_contains($exception->getMessage(), 'timed out after');
-                }, throw: false)
+                ->timeout((float) config('simed-portal.timeout', 10))
+                ->connectTimeout((float) config('simed-portal.connect_timeout', 3))
+                ->retry(
+                    max(1, (int) config('simed-portal.retry_times', 3)),
+                    (int) config('simed-portal.retry_delay_ms', 250),
+                    fn (Throwable $exception) => $exception instanceof ConnectionException,
+                    throw: false,
+                )
                 ->withOptions(['verify' => config('simed-portal.verify_ssl')])
                 ->acceptJson()
                 ->post(config('simed-portal.endpoint').$route, $data);
