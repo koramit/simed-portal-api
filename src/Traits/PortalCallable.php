@@ -40,7 +40,9 @@ trait PortalCallable
     protected function makePostPool(array $calls): array
     {
         $urls = array_map(fn (array $call) => $this->portalUrl($call[0]), $calls);
-        $this->portalToken(); // fail on missing config before sending anything
+        // Fail on bad config before sending anything (inside the pool it would be caught as a 503).
+        $this->portalToken();
+        $this->portalVerify();
 
         try {
             $results = Http::pool(function (Pool $pool) use ($calls, $urls) {
@@ -73,7 +75,7 @@ trait PortalCallable
                 fn (Throwable $exception) => $exception instanceof ConnectionException,
                 throw: false,
             )
-            ->withOptions(['verify' => config('simed-portal.verify_ssl')])
+            ->withOptions(['verify' => $this->portalVerify()])
             ->acceptJson();
     }
 
@@ -133,6 +135,36 @@ trait PortalCallable
             message: config('simed-portal.service_failed_message'),
             data: []
         );
+    }
+
+    /**
+     * Guzzle `verify` option from `simed-portal.verify_ssl`: a boolean (also "1"/"0", "yes"/"no", "on"/"off")
+     * or the path of a CA bundle, which must exist.
+     */
+    protected function portalVerify(): bool|string
+    {
+        $verify = config('simed-portal.verify_ssl', true);
+        if (is_bool($verify)) {
+            return $verify;
+        }
+
+        $verify = trim((string) $verify);
+        if ($verify === '') {
+            return true;
+        }
+
+        $flag = filter_var($verify, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        if ($flag !== null) {
+            return $flag;
+        }
+
+        if (! is_file($verify) || ! is_readable($verify)) {
+            throw new PortalNotConfiguredException(
+                "SiMED Portal CA bundle not found or not readable: {$verify} (SIMED_PORTAL_VERIFY_SSL)."
+            );
+        }
+
+        return $verify;
     }
 
     protected function portalToken(): string
