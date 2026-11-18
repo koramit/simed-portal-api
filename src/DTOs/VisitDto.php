@@ -28,24 +28,43 @@ readonly class VisitDto
         return collect($this->items)->pluck('clinic_code')->unique()->count();
     }
 
-    /** Null while the visit is still active (its `end` is not a finish time yet). */
+    /**
+     * Sum of the child encounters' own durations (time between clinics is not counted).
+     *
+     * Neither the parent's `end` (may be an automatic midnight close) nor the latest item `end`
+     * (may be a late chart edit, days later) is a reliable departure time, so the visit span is
+     * not used. A visit without items falls back to its own start → end.
+     * Null while the visit is still active, or when no item has a duration.
+     */
     public function getDurationInMinutes(): ?int
     {
         if ($this->active) {
             return null;
         }
 
-        $end = $this->items->last()?->end ?? $this->end;
+        if ($this->items->isEmpty()) {
+            return $this->end ? (int) $this->start->diffInMinutes($this->end) : null;
+        }
 
-        return $end ? (int) $this->start->diffInMinutes($end) : null;
+        $durations = $this->items
+            ->map(fn (EncounterItemDto $item) => $item->getDurationInMinutes())
+            ->filter(fn (?int $minutes) => $minutes !== null);
+
+        return $durations->isEmpty() ? null : (int) $durations->sum();
     }
 
-    public static function fromFHIRBundle(array $bundle): VisitDto
+    /**
+     * Null when the bundle has no parent visit (an entry without `partOf`),
+     * e.g. an empty bundle or one holding only child encounters.
+     */
+    public static function fromFHIRBundle(array $bundle): ?VisitDto
     {
-        $entries = collect($bundle['response']['entry']);
+        $entries = collect($bundle['response']['entry'] ?? []);
 
-        $parentEntry = $entries->first(fn ($e) => ! isset($e['resource']['partOf']));
-        $res = $parentEntry['resource'];
+        $res = $entries->first(fn ($e) => ! isset($e['resource']['partOf']))['resource'] ?? null;
+        if ($res === null) {
+            return null;
+        }
 
         $items = $entries->filter(fn ($e) => isset($e['resource']['partOf']))
             ->map(function ($e) {

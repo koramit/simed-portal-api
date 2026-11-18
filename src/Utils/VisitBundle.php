@@ -15,17 +15,11 @@ class VisitBundle
             'class' => 'AMB', // We have to provide a class to get a visit type
         ]);
 
-        return $dto->found
-            ? new VisitBundleDto(
-                $dto->ok,
-                $dto->found,
-                null,
-                VisitDto::fromFHIRBundle($dto->data),
-            )
-            : new VisitBundleDto(
-                $dto->ok,
-                $dto->found,
-                $dto->message,
-            );
+        // A found bundle without a parent visit entry counts as not found.
+        $visit = $dto->found ? VisitDto::fromFHIRBundle($dto->data) : null;
+
+        return $visit
+            ? new VisitBundleDto($dto->ok, true, null, $visit)
+            : new VisitBundleDto($dto->ok, false, $dto->message);
     }
 }

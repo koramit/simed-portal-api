@@ -38,6 +38,7 @@ class RecentlyEncounter
             ? null
             : AdmissionDto::fromDSL($ipdEntries[0]);
 
+        // Null when the bundle holds no parent visit entry.
         $latestVisit = empty($opdEntries)
             ? null
             : VisitDto::fromFHIRBundle($opdResponse->data);
