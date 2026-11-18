@@ -3,6 +3,7 @@
 namespace Koramit\SiMEDPortalAPI\DTOs;
 
 use Illuminate\Support\Carbon;
+use Koramit\SiMEDPortalAPI\Support\PortalDate;
 
 readonly class AdmissionSummaryDto
 {
@@ -28,14 +29,10 @@ readonly class AdmissionSummaryDto
             $data['gender'],
             $data['age'],
             $data['age_unit'],
-            Carbon::parse($data['admitted_at'], 'Asia/Bangkok')
-                ->shiftTimezone('Asia/Bangkok')
-                ->setTimezone('UTC'),
+            PortalDate::utc($data['admitted_at']),
             $data['discharge_status'] ?? null,
             $data['discharge_type'] ?? null,
-            ($data['discharged_at'] ?? null)
-                ? Carbon::parse($data['discharged_at'])->shiftTimezone('Asia/Bangkok')->setTimezone('UTC')
-                : null,
+            PortalDate::utc($data['discharged_at'] ?? null),
         );
     }
 }

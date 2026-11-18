@@ -15,5 +15,7 @@ return [
     // Total attempts on a connection error or timeout (1 = no retry), and the pause between them.
     'retry_times' => env('SIMED_PORTAL_RETRY_TIMES', 3),
     'retry_delay_ms' => env('SIMED_PORTAL_RETRY_DELAY_MS', 250),
+    // Timezone of the Portal's date strings that carry no offset. Parsed timestamps are returned as UTC.
+    'timezone' => env('SIMED_PORTAL_TIMEZONE', 'Asia/Bangkok'),
     'service_failed_message' => env('SIMED_PORTAL_SERVICE_FAILED_MESSAGE', 'Service unavailable at the moment, please try again shortly.'),
 ];

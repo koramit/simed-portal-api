@@ -4,6 +4,7 @@ namespace Koramit\SiMEDPortalAPI\DTOs;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Koramit\SiMEDPortalAPI\Support\PortalDate;
 
 readonly class VisitDto
 {
@@ -96,8 +97,8 @@ readonly class VisitDto
                     location: $r['location'][0]['location']['display'] ?? '',
                     department: $r['serviceProvider']['display'] ?? '',
                     doctor: $r['participant'][0]['individual']['display'] ?? 'ไม่ระบุแพทย์',
-                    start: Carbon::create($r['period']['start'])->timezone('UTC'),
-                    end: isset($r['period']['end']) ? Carbon::create($r['period']['end'])->timezone('UTC') : null,
+                    start: PortalDate::utc($r['period']['start']),
+                    end: PortalDate::utc($r['period']['end'] ?? null),
                     status: $r['status']
                 );
             })
@@ -108,8 +109,8 @@ readonly class VisitDto
             vn: $res['id'],
             hn: $res['subject']['identifier']['value'],
             patient_name: $res['subject']['display'],
-            start: Carbon::create($res['period']['start'])->timezone('UTC'),
-            end: isset($res['period']['end']) ? Carbon::create($res['period']['end'])->timezone('UTC') : null,
+            start: PortalDate::utc($res['period']['start']),
+            end: PortalDate::utc($res['period']['end'] ?? null),
             type: $res['type'][0]['coding'][0]['display'] ?? null,
             status: $res['status'],
             active: in_array($res['status'], self::ACTIVE_STATUSES, true),

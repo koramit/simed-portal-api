@@ -4,6 +4,7 @@ namespace Koramit\SiMEDPortalAPI\DTOs;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Koramit\SiMEDPortalAPI\Support\PortalDate;
 
 readonly class WardLocationDto
 {
@@ -35,10 +36,8 @@ readonly class WardLocationDto
                 : $wardNames[2];
         }
         $ward_name = Str::replaceFirst('หอผู้ป่วย', '', $wardName);
-        $start = Carbon::create($data['period']['start'])->timezone('UTC');
-        $end = $data['period']['end'] ?? null
-            ? Carbon::create($data['period']['end'])->timezone('UTC')
-            : null;
+        $start = PortalDate::utc($data['period']['start']);
+        $end = PortalDate::utc($data['period']['end'] ?? null);
 
         return new static($ward_code, $ward_name, $bed, $room, $start, $end);
     }

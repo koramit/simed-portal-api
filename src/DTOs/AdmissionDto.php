@@ -4,6 +4,7 @@ namespace Koramit\SiMEDPortalAPI\DTOs;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Koramit\SiMEDPortalAPI\Support\PortalDate;
 
 /**
  * Practitioner fields have one meaning whichever source built the DTO:
@@ -54,10 +55,8 @@ readonly class AdmissionDto
         $attend_practitioner = static::findPractitioner($participants, self::ATTEND_PRACTITIONER_CODE, self::ATTEND_PRACTITIONER_DISPLAY)
             ?? $admit_practitioner;
         $discharge_practitioner = static::findPractitioner($participants, self::ATTEND_PRACTITIONER_CODE, self::DISCHARGE_PRACTITIONER_DISPLAY);
-        $admitted_at = Carbon::create($data['period']['start'])->timezone('UTC');
-        $discharged_at = $data['period']['end'] ?? null
-            ? Carbon::create($data['period']['end'])->timezone('UTC')
-            : null;
+        $admitted_at = PortalDate::utc($data['period']['start']);
+        $discharged_at = PortalDate::utc($data['period']['end'] ?? null);
         $extensions = $data['hospitalization']['extension'] ?? [];
         $discharge_status = static::findExtensionDisplay($extensions, 'DischargeStatus');
         $discharge_type = static::findExtensionDisplay($extensions, 'DischargeType');
@@ -172,7 +171,7 @@ readonly class AdmissionDto
             hn: $data['hn'],
             patient_name: $data['patient_name'],
             an: $data['an'],
-            admitted_at: Carbon::create($data['admitted_at'], 'Asia/Bangkok')->timezone('UTC'),
+            admitted_at: PortalDate::utc($data['admitted_at']),
             locations: collect([
                 new WardLocationDto(
                     ward_code: $data['ward_number'],
@@ -182,9 +181,7 @@ readonly class AdmissionDto
             ]),
             // WS reports a single doctor and not its role, so admit/discharge practitioners stay null.
             attend_practitioner: $data['attending'],
-            discharged_at: $discharged
-                ? Carbon::create($data['discharged_at'], 'Asia/Bangkok')->timezone('UTC')
-                : null,
+            discharged_at: PortalDate::utc($data['discharged_at']),
             discharge_status: $data['discharge_status'],
             discharge_type: $data['discharge_type'],
             active: ! $discharged,

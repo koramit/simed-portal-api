@@ -3,6 +3,7 @@
 namespace Koramit\SiMEDPortalAPI\DTOs;
 
 use Illuminate\Support\Carbon;
+use Koramit\SiMEDPortalAPI\Support\PortalDate;
 
 readonly class PatientDto
 {
@@ -37,7 +38,7 @@ readonly class PatientDto
     {
         return new static(
             $data['alive'],
-            $data['date_death'] ? Carbon::create($data['date_death']) : null,
+            PortalDate::date($data['date_death']),
             $data['hn'],
             $data['patient_name'],
             $data['title'],
@@ -45,7 +46,7 @@ readonly class PatientDto
             $data['middle_name'],
             $data['last_name'],
             $data['document_id'],
-            $data['dob'] ? Carbon::create($data['dob']) : null,
+            PortalDate::date($data['dob']),
             $data['gender'],
             $data['race'],
             $data['nation'],
@@ -67,9 +68,7 @@ readonly class PatientDto
     {
         return new static(
             $data['alive'],
-            $data['date_death'] ?? null
-                ? Carbon::create($data['date_death'])
-                : null,
+            PortalDate::date($data['date_death'] ?? null),
             $data['hn'],
             $data['patient_name'],
             $data['title'],
@@ -77,7 +76,7 @@ readonly class PatientDto
             $data['middle_name'],
             $data['last_name'],
             $data['document_id'],
-            $data['dob'] ? Carbon::create($data['dob']) : null,
+            PortalDate::date($data['dob']),
             $data['gender'],
             $data['race'],
             $data['nation'],
