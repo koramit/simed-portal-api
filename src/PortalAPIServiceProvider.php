@@ -19,7 +19,7 @@ class PortalAPIServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $configPath = __DIR__.'/../config/simed-portal.php';
-            $this->publishes([$configPath => $this->getConfigPath()], 'config');
+            $this->publishes([$configPath => $this->getConfigPath()], 'simed-portal-config');
         }
     }
 
