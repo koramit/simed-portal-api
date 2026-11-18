@@ -38,7 +38,7 @@ readonly class PatientDto
     {
         return new static(
             $data['alive'],
-            PortalDate::date($data['date_death']),
+            PortalDate::date($data['date_death'] ?? null),
             $data['hn'],
             $data['patient_name'],
             $data['title'],
@@ -64,33 +64,9 @@ readonly class PatientDto
         );
     }
 
+    /** WS and DSL patients have the same shape. */
     public static function fromWS(array $data): static
     {
-        return new static(
-            $data['alive'],
-            PortalDate::date($data['date_death'] ?? null),
-            $data['hn'],
-            $data['patient_name'],
-            $data['title'],
-            $data['first_name'],
-            $data['middle_name'],
-            $data['last_name'],
-            $data['document_id'],
-            PortalDate::date($data['dob']),
-            $data['gender'],
-            $data['race'],
-            $data['nation'],
-            $data['tel_no'],
-            $data['spouse'],
-            $data['address'],
-            $data['subdistrict'],
-            $data['district'],
-            $data['postcode'],
-            $data['province'],
-            $data['insurance_name'],
-            $data['marital_status'],
-            $data['alternative_contact'],
-            $data['photo'] ?? [],
-        );
+        return static::fromDSL($data);
     }
 }

@@ -184,6 +184,8 @@ readonly class AdmissionDto
             discharged_at: PortalDate::utc($data['discharged_at']),
             discharge_status: $data['discharge_status'],
             discharge_type: $data['discharge_type'],
+            // WS has no status; use the FHIR values fromDSL gives for the same states.
+            status: $discharged ? 'finished' : 'in-progress',
             active: ! $discharged,
         );
     }

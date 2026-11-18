@@ -11,7 +11,8 @@ class ADUserAPI
 
     public function getUser(string|int $id): ResponseDto
     {
-        $data = is_numeric($id)
+        // org_id is 8 digits on the Portal (digits:8); anything else is a login.
+        $data = ctype_digit((string) $id)
             ? ['org_id' => $id]
             : ['login' => $id];
 
