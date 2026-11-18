@@ -6,13 +6,14 @@ use Illuminate\Support\Carbon;
 
 readonly class EncounterItemDto
 {
+    /** clinic_code, clinic_name, location, department and doctor are null when the Portal leaves them out. */
     public function __construct(
         public string $id,
-        public string $clinic_code,
-        public string $clinic_name,
-        public string $location,
-        public string $department,
-        public string $doctor,
+        public ?string $clinic_code,
+        public ?string $clinic_name,
+        public ?string $location,
+        public ?string $department,
+        public ?string $doctor,
         public Carbon $start,
         public ?Carbon $end,
         public string $status,

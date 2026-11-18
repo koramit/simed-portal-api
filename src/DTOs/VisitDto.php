@@ -24,9 +24,10 @@ readonly class VisitDto
         public Collection $items,
     ) {}
 
+    /** Items without a clinic code are not counted. */
     public function countDistinctClinics(): int
     {
-        return collect($this->items)->pluck('clinic_code')->unique()->count();
+        return $this->items->pluck('clinic_code')->filter()->unique()->count();
     }
 
     /**
@@ -92,11 +93,11 @@ readonly class VisitDto
 
                 return new EncounterItemDto(
                     id: $r['id'],
-                    clinic_code: $r['serviceType']['coding'][0]['code'] ?? 'N/A',
-                    clinic_name: $r['serviceType']['coding'][0]['display'] ?? 'Unknown',
-                    location: $r['location'][0]['location']['display'] ?? '',
-                    department: $r['serviceProvider']['display'] ?? '',
-                    doctor: $r['participant'][0]['individual']['display'] ?? 'ไม่ระบุแพทย์',
+                    clinic_code: $r['serviceType']['coding'][0]['code'] ?? null,
+                    clinic_name: $r['serviceType']['coding'][0]['display'] ?? null,
+                    location: $r['location'][0]['location']['display'] ?? null,
+                    department: $r['serviceProvider']['display'] ?? null,
+                    doctor: $r['participant'][0]['individual']['display'] ?? null,
                     start: PortalDate::utc($r['period']['start']),
                     end: PortalDate::utc($r['period']['end'] ?? null),
                     status: $r['status']
