@@ -4,6 +4,9 @@ namespace Koramit\SiMEDPortalAPI\Traits;
 
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Pool;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -15,28 +18,70 @@ trait PortalCallable
 {
     protected function makePost(string $route, array $data): ResponseDto
     {
+        $request = $this->portalRequest(Http::createPendingRequest());
         $url = $this->portalUrl($route);
-        $token = (string) config('simed-portal.token');
-        if ($token === '') {
-            throw PortalNotConfiguredException::missing('token', 'SIMED_PORTAL_TOKEN');
-        }
 
         try {
-            // Retry only connection errors and timeouts; a received response (any status) is final.
-            $response = Http::withToken($token)
-                ->timeout((float) config('simed-portal.timeout', 10))
-                ->connectTimeout((float) config('simed-portal.connect_timeout', 3))
-                ->retry(
-                    max(1, (int) config('simed-portal.retry_times', 3)),
-                    (int) config('simed-portal.retry_delay_ms', 250),
-                    fn (Throwable $exception) => $exception instanceof ConnectionException,
-                    throw: false,
-                )
-                ->withOptions(['verify' => config('simed-portal.verify_ssl')])
-                ->acceptJson()
-                ->post($url, $data);
+            $response = $request->post($url, $data);
         } catch (Exception $e) {
-            Log::error($route.'@portal '.$e->getMessage());
+            return $this->toResponseDto($route, $e);
+        }
+
+        return $this->toResponseDto($route, $response);
+    }
+
+    /**
+     * Send several posts concurrently in-process (Http::pool), with the same token, timeouts
+     * and retries as makePost.
+     *
+     * @param  array<string, array{0: string, 1: array}>  $calls  key => [route, data]
+     * @return array<string, ResponseDto> same keys
+     */
+    protected function makePostPool(array $calls): array
+    {
+        $urls = array_map(fn (array $call) => $this->portalUrl($call[0]), $calls);
+        $this->portalToken(); // fail on missing config before sending anything
+
+        try {
+            $results = Http::pool(function (Pool $pool) use ($calls, $urls) {
+                foreach ($calls as $key => [, $data]) {
+                    $this->portalRequest($pool->as((string) $key))->post($urls[$key], $data);
+                }
+            });
+        } catch (Exception $e) {
+            $results = array_fill_keys(array_keys($calls), $e);
+        }
+
+        $dtos = [];
+        foreach ($calls as $key => [$route]) {
+            $dtos[$key] = $this->toResponseDto($route, $results[$key] ?? null);
+        }
+
+        return $dtos;
+    }
+
+    /** Apply the Portal token, timeouts, retries and TLS options to a request. */
+    protected function portalRequest(PendingRequest $request): PendingRequest
+    {
+        // Retry only connection errors and timeouts; a received response (any status) is final.
+        return $request->withToken($this->portalToken())
+            ->timeout((float) config('simed-portal.timeout', 10))
+            ->connectTimeout((float) config('simed-portal.connect_timeout', 3))
+            ->retry(
+                max(1, (int) config('simed-portal.retry_times', 3)),
+                (int) config('simed-portal.retry_delay_ms', 250),
+                fn (Throwable $exception) => $exception instanceof ConnectionException,
+                throw: false,
+            )
+            ->withOptions(['verify' => config('simed-portal.verify_ssl')])
+            ->acceptJson();
+    }
+
+    /** Turn a Portal response, or the exception that replaced it, into a ResponseDto. */
+    protected function toResponseDto(string $route, Response|Throwable|null $response): ResponseDto
+    {
+        if (! $response instanceof Response) {
+            Log::error($route.'@portal '.($response?->getMessage() ?? 'no response'));
 
             return new ResponseDto(
                 ok: false,
@@ -88,6 +133,16 @@ trait PortalCallable
             message: config('simed-portal.service_failed_message'),
             data: []
         );
+    }
+
+    protected function portalToken(): string
+    {
+        $token = (string) config('simed-portal.token');
+        if ($token === '') {
+            throw PortalNotConfiguredException::missing('token', 'SIMED_PORTAL_TOKEN');
+        }
+
+        return $token;
     }
 
     /** Join the endpoint and route with exactly one `/`, whether or not the endpoint ends with one. */

@@ -55,4 +55,17 @@ class EncounterAPI
             )
             : $this->makePost('en', $payload);
     }
+
+    /**
+     * Run several `request:` searches concurrently (one round trip in wall time).
+     *
+     * @param  array<string, array>  $requests  key => the `request` array getEncounter() would take
+     * @return array<string, ResponseDto> same keys
+     */
+    public function getEncounters(array $requests): array
+    {
+        return $this->makePostPool(
+            array_map(fn (array $request) => ['en', ['request' => $request]], $requests)
+        );
+    }
 }
