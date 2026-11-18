@@ -27,7 +27,7 @@ class AdmissionAPI
         return $this->makePost($endpoint, ['hn' => $hn]);
     }
 
-    public function getPatientRecentlyAdmissionWS(string|int $hn, bool $withSensitiveData = true): ResponseDto
+    public function getPatientLatestAdmissionWS(string|int $hn, bool $withSensitiveData = true): ResponseDto
     {
         $endpoint = 'pt/adm/lst'.($withSensitiveData ? '/sd' : '');
 
@@ -54,7 +54,7 @@ class AdmissionAPI
         ]);
     }
 
-    public function getPatientRecentlyAdmissionEHIS(string|int $hn, bool $raw = false, bool $withSensitiveData = true): ResponseDto
+    public function getPatientLatestAdmissionEHIS(string|int $hn, bool $raw = false, bool $withSensitiveData = true): ResponseDto
     {
         $endpoint = 'dsl/pt/adm/lst'.($withSensitiveData ? '/sd' : '');
 
@@ -79,7 +79,7 @@ class AdmissionAPI
         ]);
     }
 
-    public function getPatientRecentlyAdmissionDSL(string|int $hn): ResponseDto
+    public function getPatientLatestAdmissionDSL(string|int $hn): ResponseDto
     {
         return (new EncounterAPI)->getEncounter(request: [
             'subject' => 'HN'.$hn,

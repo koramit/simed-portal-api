@@ -3,13 +3,13 @@
 namespace Koramit\SiMEDPortalAPI\Utils;
 
 use Koramit\SiMEDPortalAPI\DTOs\AdmissionDto;
-use Koramit\SiMEDPortalAPI\DTOs\RecentlyEncounterDto;
+use Koramit\SiMEDPortalAPI\DTOs\LatestEncountersDto;
 use Koramit\SiMEDPortalAPI\DTOs\VisitDto;
 use Koramit\SiMEDPortalAPI\EncounterAPI;
 
-class RecentlyEncounter
+class LatestEncounters
 {
-    public function __invoke(string|int $hn): RecentlyEncounterDto
+    public function __invoke(string|int $hn): LatestEncountersDto
     {
         // Both searches run concurrently in-process (Http::pool), so Http::fake() works in host-app tests.
         ['ipd' => $ipdResponse, 'opd' => $opdResponse] = (new EncounterAPI)->getEncounters([
@@ -43,7 +43,7 @@ class RecentlyEncounter
 
         $failed = collect([$ipdResponse, $opdResponse])->first(fn ($response) => ! $response->ok);
 
-        return new RecentlyEncounterDto(
+        return new LatestEncountersDto(
             admission: $latestAdmission,
             visit: $latestVisit,
             ok: $failed === null,

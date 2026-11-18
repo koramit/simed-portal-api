@@ -131,7 +131,7 @@ trait PortalCallable
                 found: $data['found'] ?? false,
                 status: $response->status(),
                 message: $data['message'] ?? null,
-                data: $this->trimUnuseKeys($data)
+                data: $this->trimUnusedKeys($data)
             );
         }
 
@@ -203,7 +203,7 @@ trait PortalCallable
         return $endpoint.'/'.ltrim($route, '/');
     }
 
-    protected function trimUnuseKeys(array $data): array
+    protected function trimUnusedKeys(array $data): array
     {
         unset(
             $data['ok'],

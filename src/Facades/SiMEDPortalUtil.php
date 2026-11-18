@@ -3,13 +3,13 @@
 namespace Koramit\SiMEDPortalAPI\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Koramit\SiMEDPortalAPI\DTOs\LatestEncountersDto;
 use Koramit\SiMEDPortalAPI\DTOs\PortalResultDto;
-use Koramit\SiMEDPortalAPI\DTOs\RecentlyEncounterDto;
 use Koramit\SiMEDPortalAPI\DTOs\VisitBundleDto;
 use Koramit\SiMEDPortalAPI\PortalUtilManager;
 
 /**
- * @method static RecentlyEncounterDto getPatientRecentlyEncounter(string|int $hn)
+ * @method static LatestEncountersDto getPatientLatestEncounters(string|int $hn)
  * @method static VisitBundleDto getVisitBundle(string|int $vn)
  * @method static PortalResultDto getPatientWS(string|int $hn, bool $withSensitiveData = true)
  * @method static PortalResultDto getPatientDSL(string $keyValue, string $keyName = 'hn', bool $withSensitiveData = true)

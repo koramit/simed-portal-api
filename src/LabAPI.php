@@ -14,7 +14,7 @@ class LabAPI
         return $this->makePost('lab-pending', ['hn' => $hn]);
     }
 
-    public function getLabRecentlyOrders(string|int $hn): ResponseDto
+    public function getLabRecentOrders(string|int $hn): ResponseDto
     {
         return $this->makePost('lab-recently', ['hn' => $hn]);
     }
@@ -24,14 +24,14 @@ class LabAPI
         return $this->makePost('lab-from-ref-no', ['ref_no' => $refNo]);
     }
 
-    public function getLabFromServiceId(string|int $hn, int|string|array $serviceIds, bool $recently = false, ?string $dateStart = null, ?string $dateEnd = null): ResponseDto
+    public function getLabFromServiceId(string|int $hn, int|string|array $serviceIds, bool $latest = false, ?string $dateStart = null, ?string $dateEnd = null): ResponseDto
     {
         return $this->makePost(
             'lab-from-service-id',
             [
                 'hn' => $hn,
                 'service_ids' => is_array($serviceIds) ? $serviceIds : [$serviceIds],
-                'latest' => $recently,
+                'latest' => $latest,
                 'date_start' => $dateStart,
                 'date_end' => $dateEnd,
             ]);

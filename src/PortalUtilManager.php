@@ -7,12 +7,12 @@ use Koramit\SiMEDPortalAPI\DTOs\AdmissionDto;
 use Koramit\SiMEDPortalAPI\DTOs\AdmissionSummaryDto;
 use Koramit\SiMEDPortalAPI\DTOs\AdmissionWardSummaryDto;
 use Koramit\SiMEDPortalAPI\DTOs\ADUserDto;
+use Koramit\SiMEDPortalAPI\DTOs\LatestEncountersDto;
 use Koramit\SiMEDPortalAPI\DTOs\PatientDto;
 use Koramit\SiMEDPortalAPI\DTOs\PortalResultDto;
-use Koramit\SiMEDPortalAPI\DTOs\RecentlyEncounterDto;
 use Koramit\SiMEDPortalAPI\DTOs\ResponseDto;
 use Koramit\SiMEDPortalAPI\DTOs\VisitBundleDto;
-use Koramit\SiMEDPortalAPI\Utils\RecentlyEncounter;
+use Koramit\SiMEDPortalAPI\Utils\LatestEncounters;
 use Koramit\SiMEDPortalAPI\Utils\VisitBundle;
 
 /**
@@ -22,9 +22,9 @@ use Koramit\SiMEDPortalAPI\Utils\VisitBundle;
  */
 class PortalUtilManager
 {
-    public function getPatientRecentlyEncounter(string|int $hn): RecentlyEncounterDto
+    public function getPatientLatestEncounters(string|int $hn): LatestEncountersDto
     {
-        return app(RecentlyEncounter::class)($hn);
+        return app(LatestEncounters::class)($hn);
     }
 
     public function getVisitBundle(string|int $vn): VisitBundleDto

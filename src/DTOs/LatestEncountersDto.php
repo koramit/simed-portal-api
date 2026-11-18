@@ -2,7 +2,7 @@
 
 namespace Koramit\SiMEDPortalAPI\DTOs;
 
-readonly class RecentlyEncounterDto
+readonly class LatestEncountersDto
 {
     /**
      * `ok` is false when either Portal call failed, so a null `admission` / `visit`
