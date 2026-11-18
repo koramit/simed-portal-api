@@ -29,10 +29,10 @@ readonly class AdmissionSummaryDto
             $data['gender'],
             $data['age'],
             $data['age_unit'],
-            PortalDate::utc($data['admitted_at']),
+            PortalDate::wallClockUtc($data['admitted_at']),
             $data['discharge_status'] ?? null,
             $data['discharge_type'] ?? null,
-            PortalDate::utc($data['discharged_at'] ?? null),
+            PortalDate::wallClockUtc($data['discharged_at'] ?? null),
         );
     }
 }
