@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "found": true,
+  "active": true,
+  "login": "tester.sys",
+  "org_id": "10012345",
+  "full_name": "นายทดสอบ ระบบ",
+  "document_id": null,
+  "position_id": "7000001",
+  "position_name": "แพทย์",
+  "division_id": "5000001",
+  "division_name": "ภาควิชาอายุรศาสตร์",
+  "password_expires_in_days": 42,
+  "remark": null
+}

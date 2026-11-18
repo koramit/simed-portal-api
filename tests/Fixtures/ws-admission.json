@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "found": true,
+  "hn": "00000099",
+  "an": "00000002",
+  "patient_name": "นายทดสอบ ระบบ",
+  "alive": true,
+  "ward_number": "1216",
+  "ward_name": "อายุรศาสตร์ชาย 1",
+  "ward_name_short": "อายุรฯ ช.1",
+  "admitted_at": "2026-11-10 08:30:00",
+  "discharged_at": null,
+  "attending": "นพ.เจ้าของไข้ ทดสอบ",
+  "attending_license_no": "ว00000",
+  "discharge_status": null,
+  "discharge_type": null
+}

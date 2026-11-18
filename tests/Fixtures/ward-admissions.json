@@ -1,0 +1,24 @@
+{
+  "ok": true,
+  "found": true,
+  "admissions": [
+    {
+      "an": 1,
+      "hn": 99,
+      "name": "นายทดสอบ ระบบ",
+      "gender": "male",
+      "age": 45,
+      "age_unit": "Yo",
+      "admitted_at": "2026-11-17T08:21:00.000000Z"
+    },
+    {
+      "an": 3,
+      "hn": 98,
+      "name": "นางทดสอบ ไม่มีวันเกิด",
+      "gender": "female",
+      "age": null,
+      "age_unit": null,
+      "admitted_at": "2026-11-16T22:05:00.000000Z"
+    }
+  ]
+}

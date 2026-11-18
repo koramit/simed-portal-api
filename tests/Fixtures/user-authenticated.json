@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "found": true,
+  "login": "tester.sys",
+  "org_id": "10012345",
+  "full_name": "นายทดสอบ ระบบ",
+  "full_name_en": "Tester System",
+  "document_id": null,
+  "position_id": "7000001",
+  "position_name": "แพทย์",
+  "division_id": "5000001",
+  "division_name": "ภาควิชาอายุรศาสตร์",
+  "department_name": "อายุรศาสตร์",
+  "office_name": "สำนักงานภาควิชา",
+  "email": "tester@example.test",
+  "password_expires_in_days": 42,
+  "remark": null
+}

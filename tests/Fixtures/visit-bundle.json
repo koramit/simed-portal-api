@@ -1,0 +1,159 @@
+{
+  "ok": true,
+  "found": true,
+  "response": {
+    "resourceType": "Bundle",
+    "total": 4,
+    "entry": [
+      {
+        "resource": {
+          "resourceType": "Encounter",
+          "id": "VN0000001",
+          "status": "finished",
+          "class": {
+            "code": "AMB"
+          },
+          "subject": {
+            "identifier": {
+              "value": "00000099"
+            },
+            "display": "นายทดสอบ ระบบ"
+          },
+          "period": {
+            "start": "2026-11-17T09:58:17+07:00",
+            "end": "2026-11-18T00:02:54+07:00"
+          },
+          "type": [
+            {
+              "coding": [
+                {
+                  "code": "OPD",
+                  "display": "ผู้ป่วยนอก"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "Encounter",
+          "id": "EN0000001",
+          "status": "finished",
+          "class": {
+            "code": "AMB"
+          },
+          "subject": {
+            "identifier": {
+              "value": "00000099"
+            },
+            "display": "นายทดสอบ ระบบ"
+          },
+          "period": {
+            "start": "2026-11-17T10:24:17+07:00",
+            "end": "2026-11-17T13:39:58+07:00"
+          },
+          "partOf": {
+            "reference": "Encounter/VN0000001"
+          },
+          "serviceType": {
+            "coding": [
+              {
+                "code": "C01",
+                "display": "คลินิกอายุรกรรม"
+              }
+            ]
+          },
+          "location": [
+            {
+              "location": {
+                "display": "ตึกผู้ป่วยนอก ชั้น 2"
+              }
+            }
+          ],
+          "serviceProvider": {
+            "display": "ภาควิชาอายุรศาสตร์"
+          },
+          "participant": [
+            {
+              "individual": {
+                "display": "นพ.ตรวจ ทดสอบ"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "Encounter",
+          "id": "EN0000002",
+          "status": "finished",
+          "class": {
+            "code": "AMB"
+          },
+          "subject": {
+            "identifier": {
+              "value": "00000099"
+            },
+            "display": "นายทดสอบ ระบบ"
+          },
+          "period": {
+            "start": "2026-11-17T09:58:17+07:00",
+            "end": "2026-11-17T13:28:09+07:00"
+          },
+          "partOf": {
+            "reference": "Encounter/VN0000001"
+          },
+          "serviceType": {
+            "coding": [
+              {
+                "code": "C02",
+                "display": "คลินิกโรคหัวใจ"
+              }
+            ]
+          },
+          "location": [
+            {
+              "location": {
+                "display": "ตึกผู้ป่วยนอก ชั้น 3"
+              }
+            }
+          ],
+          "serviceProvider": {
+            "display": "ภาควิชาอายุรศาสตร์"
+          },
+          "participant": [
+            {
+              "individual": {
+                "display": "พญ.หัวใจ ทดสอบ"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "resource": {
+          "resourceType": "Encounter",
+          "id": "EN0000003",
+          "status": "finished",
+          "class": {
+            "code": "AMB"
+          },
+          "subject": {
+            "identifier": {
+              "value": "00000099"
+            },
+            "display": "นายทดสอบ ระบบ"
+          },
+          "period": {
+            "start": "2026-11-17T11:00:00+07:00",
+            "end": "2026-11-17T11:30:00+07:00"
+          },
+          "partOf": {
+            "reference": "Encounter/VN0000001"
+          }
+        }
+      }
+    ]
+  }
+}

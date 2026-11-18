@@ -1,0 +1,146 @@
+{
+  "ok": true,
+  "found": true,
+  "response": {
+    "resourceType": "Encounter",
+    "id": "AN00000001",
+    "status": "finished",
+    "class": {
+      "code": "IMP"
+    },
+    "identifier": [
+      {
+        "system": "http://si.mahidol.ac.th/mrs/admission/an",
+        "value": "00000001"
+      }
+    ],
+    "subject": {
+      "identifier": {
+        "value": "00000099"
+      },
+      "display": "นายทดสอบ ระบบ"
+    },
+    "period": {
+      "start": "2026-11-10T08:30:00+07:00",
+      "end": "2026-11-13T14:00:00+07:00"
+    },
+    "participant": [
+      {
+        "type": [
+          {
+            "coding": [
+              {
+                "code": "AdmitPractitioner",
+                "display": "แพทย์รับไว้"
+              }
+            ],
+            "text": "แพทย์รับไว้"
+          }
+        ],
+        "individual": {
+          "display": "พญ.รับไว้ ทดสอบ"
+        }
+      },
+      {
+        "type": [
+          {
+            "coding": [
+              {
+                "code": "AttendPractitioner",
+                "display": "แพทย์เจ้าของไข้"
+              }
+            ],
+            "text": "แพทย์เจ้าของไข้"
+          }
+        ],
+        "individual": {
+          "display": "นพ.เจ้าของไข้ ทดสอบ"
+        }
+      },
+      {
+        "type": [
+          {
+            "coding": [
+              {
+                "code": "AttendPractitioner",
+                "display": "แพทย์จำหน่าย"
+              }
+            ],
+            "text": "แพทย์จำหน่าย"
+          }
+        ],
+        "individual": {
+          "display": "นพ.จำหน่าย ทดสอบ"
+        }
+      }
+    ],
+    "hospitalization": {
+      "extension": [
+        {
+          "url": "http://si.mahidol.ac.th/fhir/StructureDefinition/dsl-ex-eHIS-DischargeStatus",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "code": "2",
+                "display": "Improved"
+              }
+            ]
+          }
+        },
+        {
+          "url": "http://si.mahidol.ac.th/fhir/StructureDefinition/dsl-ex-eHIS-DischargeType",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "code": "1",
+                "display": "With approval"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "location": [
+      {
+        "location": {
+          "reference": "Location/B05-R2-1218",
+          "display": "เตียง 5-ห้อง 2-หอผู้ป่วยอายุรศาสตร์หญิง 2"
+        },
+        "period": {
+          "start": "2026-11-11T09:00:00+07:00",
+          "end": "2026-11-13T14:00:00+07:00"
+        }
+      },
+      {
+        "location": {
+          "reference": "Location/B12-R3-1216",
+          "display": "เตียง 12-ห้อง 3-หอผู้ป่วยอายุรศาสตร์ชาย 1"
+        },
+        "period": {
+          "start": "2026-11-10T08:30:00+07:00",
+          "end": "2026-11-10T11:00:00+07:00"
+        }
+      },
+      {
+        "location": {
+          "reference": "Location/B14-R3-1216",
+          "display": "เตียง 14-ห้อง 3-หอผู้ป่วยอายุรศาสตร์ชาย 1"
+        },
+        "period": {
+          "start": "2026-11-10T11:00:00+07:00",
+          "end": "2026-11-11T09:00:00+07:00"
+        }
+      },
+      {
+        "location": {
+          "reference": "Location/B05-R2-1218",
+          "display": "เตียง 5-ห้อง 2-หอผู้ป่วยอายุรศาสตร์หญิง 2"
+        },
+        "period": {
+          "start": "2026-11-13T14:00:00+07:00",
+          "end": "2026-11-13T14:00:00+07:00"
+        }
+      }
+    ]
+  }
+}

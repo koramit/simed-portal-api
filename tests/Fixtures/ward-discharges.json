@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "found": true,
+  "admissions": [
+    {
+      "an": 4,
+      "hn": 97,
+      "name": "นายจำหน่าย ทดสอบ",
+      "gender": "male",
+      "age": 8,
+      "age_unit": "Mo",
+      "discharge_status": "Improved",
+      "discharge_type": "With approval",
+      "admitted_at": "2026-11-10T08:30:00.000000Z",
+      "discharged_at": "2026-11-17T10:15:00.000000Z"
+    }
+  ]
+}

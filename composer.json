@@ -7,12 +7,19 @@
         "laravel/framework": "^12.71|^13.0"
     },
     "require-dev": {
-        "laravel/pint": "^1.24"
+        "laravel/pint": "^1.24",
+        "pestphp/pest": "^4.4|^5.3",
+        "orchestra/testbench": "^10.0|^11.3"
     },
     "license": "MIT",
     "autoload": {
         "psr-4": {
             "Koramit\\SiMEDPortalAPI\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Koramit\\SiMEDPortalAPI\\Tests\\": "tests/"
         }
     },
     "authors": [
@@ -22,15 +29,21 @@
         }
     ],
     "extra": {
-      "laravel": {
-        "providers": [
-          "Koramit\\SiMEDPortalAPI\\PortalAPIServiceProvider"
-        ]
-      }
+        "laravel": {
+            "providers": [
+                "Koramit\\SiMEDPortalAPI\\PortalAPIServiceProvider"
+            ]
+        }
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
     "scripts": {
-      "lint": "pint"
+        "lint": "pint",
+        "test": "pest"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }

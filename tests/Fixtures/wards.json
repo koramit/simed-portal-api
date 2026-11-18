@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "found": true,
+  "admissions": [
+    {
+      "ward_number": 1,
+      "ward_name": "หอผู้ป่วยอายุรศาสตร์ชาย 1",
+      "ward_name_short": "อายุรฯ ช.1",
+      "ward_ref_id": "01216",
+      "admissions_count": 28
+    },
+    {
+      "ward_number": 2,
+      "ward_name": "หอผู้ป่วยพิเศษ",
+      "ward_name_short": "พิเศษ",
+      "ward_ref_id": null,
+      "admissions_count": 3
+    }
+  ]
+}

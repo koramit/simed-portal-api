@@ -108,12 +108,29 @@ class PortalUtilManager
         );
     }
 
-    /** @return PortalResultDto<Collection<int, AdmissionSummaryDto>> */
-    public function getDischargedAdmissions(string $beginDate, ?string $endDate = null, string|int|null $wardNumber = null): PortalResultDto
+    /**
+     * Admissions of one ward discharged between the dates (`$endDate` defaults to the day after `$beginDate`).
+     *
+     * @return PortalResultDto<Collection<int, AdmissionSummaryDto>>
+     */
+    public function getDischargedAdmissions(string|int $wardNumber, string $beginDate, ?string $endDate = null): PortalResultDto
     {
         return $this->toListResult(
             (new AdmissionWardAPI)->getDischargeAdmissions($beginDate, $endDate, $wardNumber),
             fn (array $data) => AdmissionSummaryDto::fromPortal($data),
+        );
+    }
+
+    /**
+     * Wards with discharges between the dates, with their counts.
+     *
+     * @return PortalResultDto<Collection<int, AdmissionWardSummaryDto>>
+     */
+    public function getDischargedAdmissionWards(string $beginDate, ?string $endDate = null): PortalResultDto
+    {
+        return $this->toListResult(
+            (new AdmissionWardAPI)->getDischargeAdmissions($beginDate, $endDate),
+            fn (array $data) => AdmissionWardSummaryDto::fromPortal($data),
         );
     }
 
@@ -126,12 +143,12 @@ class PortalUtilManager
         return new PortalResultDto(true, true, $response->message, $map($response->data));
     }
 
-    /** List responses carry their records at the root of `data`. */
+    /** The ward list routes (w/adm, adm/dc) return their rows under `admissions`. */
     protected function toListResult(ResponseDto $response, callable $map): PortalResultDto
     {
         return $this->toResult(
             $response,
-            fn (array $data) => collect($data)->filter(fn ($row) => is_array($row))->map($map)->values(),
+            fn (array $data) => collect($data['admissions'] ?? [])->map($map)->values(),
         );
     }
 }

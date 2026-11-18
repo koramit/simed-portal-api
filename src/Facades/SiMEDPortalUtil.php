@@ -19,7 +19,8 @@ use Koramit\SiMEDPortalAPI\PortalUtilManager;
  * @method static PortalResultDto getAdmissionDSL(string|int $an)
  * @method static PortalResultDto getWardActiveAdmissions(string|int $wardNumber)
  * @method static PortalResultDto getActiveAdmissionWards()
- * @method static PortalResultDto getDischargedAdmissions(string $beginDate, ?string $endDate = null, string|int|null $wardNumber = null)
+ * @method static PortalResultDto getDischargedAdmissions(string|int $wardNumber, string $beginDate, ?string $endDate = null)
+ * @method static PortalResultDto getDischargedAdmissionWards(string $beginDate, ?string $endDate = null)
  *
  * @see PortalUtilManager
  */
