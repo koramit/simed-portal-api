@@ -32,7 +32,10 @@
         "laravel": {
             "providers": [
                 "Koramit\\SiMEDPortalAPI\\PortalAPIServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "SiMEDPortalUtil": "Koramit\\SiMEDPortalAPI\\Facades\\SiMEDPortalUtil"
+            }
         }
     },
     "minimum-stability": "stable",
