@@ -5,6 +5,10 @@ namespace Koramit\SiMEDPortalAPI;
 use Koramit\SiMEDPortalAPI\DTOs\ResponseDto;
 use Koramit\SiMEDPortalAPI\Traits\PortalCallable;
 
+/**
+ * `$withSensitiveData` defaults to true on purpose: host apps are clinical and need identifying data.
+ * Pass false to call the endpoint without `/sd`; the Portal then returns the same keys with masked values.
+ */
 class PatientAPI
 {
     use PortalCallable;

@@ -18,6 +18,7 @@ use Koramit\SiMEDPortalAPI\Utils\VisitBundle;
 /**
  * Typed surface for host apps (behind the SiMEDPortalUtil facade).
  * The *API classes stay low-level and keep returning ResponseDto for older apps.
+ * `$withSensitiveData` defaults to true, like the *API classes (see PatientAPI).
  */
 class PortalUtilManager
 {
