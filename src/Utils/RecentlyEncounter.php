@@ -30,9 +30,9 @@ class RecentlyEncounter
         ]);
 
         // `total` counts entries in this response (an AMB visit comes with its child encounters),
-        // so check the entries themselves.
-        $ipdEntries = $ipdResponse->data['response']['entry'] ?? [];
-        $opdEntries = $opdResponse->data['response']['entry'] ?? [];
+        // so check the entries themselves. A failed call has `data: []`, so it yields no entries.
+        $ipdEntries = $ipdResponse->ok ? ($ipdResponse->data['response']['entry'] ?? []) : [];
+        $opdEntries = $opdResponse->ok ? ($opdResponse->data['response']['entry'] ?? []) : [];
 
         $latestAdmission = empty($ipdEntries)
             ? null
@@ -42,9 +42,13 @@ class RecentlyEncounter
             ? null
             : VisitDto::fromFHIRBundle($opdResponse->data);
 
+        $failed = collect([$ipdResponse, $opdResponse])->first(fn ($response) => ! $response->ok);
+
         return new RecentlyEncounterDto(
             admission: $latestAdmission,
             visit: $latestVisit,
+            ok: $failed === null,
+            message: $failed?->message,
         );
     }
 }
